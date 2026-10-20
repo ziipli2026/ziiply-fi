@@ -3,72 +3,83 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KSJED1C73V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KSJED1C73V');
-</script>
-
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-KSJED1C73V');</script>
 <title>Ziiply</title>
-
 <style>
-body{
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 80px auto;
-    padding: 20px;
-    text-align:center;
-    line-height:1.6;
-}
-h1{
-    font-size:60px;
-    color:#4CAF50;
-}
-h2{
-    font-weight:normal;
-}
-p{
-    font-size:20px;
-}
-.button{
-    display:inline-block;
-    padding:12px 24px;
-    background:#4CAF50;
-    color:white;
-    text-decoration:none;
-    border-radius:6px;
-}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,sans-serif}
+body{overflow:hidden}
+.stage{position:relative;width:100%;height:100dvh;overflow:hidden;background:#fff}
+.slide{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;transform:translateX(100%);transition:transform .65s ease;visibility:hidden}
+.slide.active{transform:translateX(0);visibility:visible}
+.slide.previous{transform:translateX(-100%);visibility:visible}
+.welcome{width:100%;height:100%;background:#fff;overflow:auto;text-align:center;line-height:1.6}
+.welcome-inner{max-width:1000px;margin:0 auto;padding:clamp(35px,8vh,80px) 20px 85px}
+h1{font-size:60px;color:#4CAF50;margin:.1em 0 .85em}
+h2{font-weight:normal}
+p{font-size:20px}
+.button{display:inline-block;padding:12px 24px;background:#4CAF50;color:#fff;text-decoration:none;border-radius:6px}
+.poster{background:#080e08}
+.poster img{display:block;width:100%;height:100%;object-fit:contain}
+.controls{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:7px 12px;border-radius:25px;background:rgba(0,0,0,.68);color:white;font:13px Arial,sans-serif;z-index:5;white-space:nowrap}
+.controls button{border:0;background:transparent;color:white;font:inherit;cursor:pointer;padding:5px}
+.controls button:focus-visible{outline:2px solid #b8ff77;border-radius:5px}
+#countdown{font-variant-numeric:tabular-nums}
+@media(max-width:600px){h1{font-size:52px}p{font-size:18px}.welcome-inner{padding-top:8vh}.controls{font-size:11px;gap:5px}}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
 </style>
-
 </head>
 <body>
-
+<main class="stage" aria-label="Ziiply presentation">
+<section class="slide welcome active" id="welcome">
+<div class="welcome-inner">
 <h1>Ziiply</h1>
-
 <h2>One search. All offers.</h2>
-
-<p>
-We're building a smarter way to find grocery offers and compare products across retailers.
-</p>
-
-<p>
-🚧 Currently under development
-</p>
-
-<p>
-Follow our journey on LinkedIn.
-</p>
-
-<p>
-<a class="button" href="https://www.linkedin.com/company/ziiply">
-Visit LinkedIn
-</a>
-</p>
-
+<p>We're building a smarter way to find grocery offers and compare products across retailers.</p>
+<p>🚧 Currently under development</p>
+<p>Follow our journey on LinkedIn.</p>
+<p><a class="button" href="https://www.linkedin.com/company/ziiply">Visit LinkedIn</a></p>
+</div>
+</section>
+<section class="slide poster" aria-label="Kolme varjoa, yksi tavoite"><img src="kolme-varjoa.png" alt="Kolme persoonaa, yksi yhteinen tavoite: tehdä ruoka-arjesta fiksumpaa"></section>
+<section class="slide poster" aria-label="Tässä on Gösta"><img src="gosta.png" alt="Gösta, tarjousten hintahaistelija"></section>
+<div class="controls" aria-label="Esityksen ohjaimet">
+<button id="prev" type="button" aria-label="Edellinen dia">❮</button>
+<span id="countdown" aria-live="off">Esittely alkaa 10 s / Presentation in 10 s</span>
+<button id="next" type="button" aria-label="Seuraava dia">❯</button>
+<button id="pause" type="button" aria-label="Pysäytä esitys">⏸</button>
+</div>
+</main>
+<script>
+(()=>{
+const slides=[...document.querySelectorAll('.slide')];
+const label=document.getElementById('countdown');
+const pause=document.getElementById('pause');
+let available=[0],index=0,remaining=10,paused=false;
+const duration=i=>i===0?10:6;
+function show(n){
+ const old=index;index=(n+available.length)%available.length;
+ slides.forEach((s,i)=>{s.classList.remove('active','previous');if(i===available[old]&&old!==index)s.classList.add('previous');if(i===available[index])s.classList.add('active')});
+ remaining=duration(index);render();
+}
+function render(){
+ label.textContent=index===0?'Esittely alkaa '+remaining+' s / Presentation in '+remaining+' s':'Seuraava kuva '+remaining+' s / Next slide in '+remaining+' s';
+ pause.textContent=paused?'▶':'⏸';pause.setAttribute('aria-label',paused?'Jatka esitystä':'Pysäytä esitys');
+}
+document.getElementById('prev').addEventListener('click',()=>show(index-1));
+document.getElementById('next').addEventListener('click',()=>show(index+1));
+pause.addEventListener('click',()=>{paused=!paused;render()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)paused=true;render()});
+Promise.all(slides.slice(1).map((s,i)=>new Promise(resolve=>{
+ const img=s.querySelector('img');
+ if(img.complete){resolve(img.naturalWidth>0?i+1:null);return}
+ img.addEventListener('load',()=>resolve(i+1),{once:true});
+ img.addEventListener('error',()=>resolve(null),{once:true});
+}))).then(found=>{available=[0,...found.filter(v=>v!==null)];render()});
+setInterval(()=>{if(paused||available.length<2)return;remaining--;if(remaining<=0)show(index+1);else render()},1000);
+render();
+})();
+</script>
 </body>
 </html>
