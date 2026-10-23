@@ -45,6 +45,7 @@ p{font-size:20px}
 <section class="slide poster" aria-label="Kolme varjoa, yksi tavoite"><img src="images/ziiplyFI_20_10.png" alt="Kolme persoonaa, yksi yhteinen tavoite: tehdä ruoka-arjesta fiksumpaa"></section>
 
 <section class="slide poster" aria-label="Göstan esittely"><img src="images/gostaFI_20_10.jpeg" alt="Göstan esittely"></section>
+<section class="slide poster" aria-label="Justiinan esittely" data-release-at="2026-10-23T15:00:00Z"><img src="images/Justiina_23_10.png" alt="Justiina – arjen apulainen"></section>
 
 <div class="controls" aria-label="Esityksen ohjaimet">
 <button id="prev" type="button" aria-label="Edellinen dia">❮</button>
@@ -59,6 +60,14 @@ const slides=[...document.querySelectorAll('.slide')];
 const label=document.getElementById('countdown');
 const pause=document.getElementById('pause');
 let available=[0],index=0,remaining=10,paused=false;
+const loadedSlides=new Set();
+function refreshAvailable(){
+ const now=Date.now();
+ const next=[0,...slides.slice(1).map((s,i)=>loadedSlides.has(i+1)&&(!s.dataset.releaseAt||now>=Date.parse(s.dataset.releaseAt))?i+1:null).filter(i=>i!==null)];
+ if(next.length!==available.length||next.some((value,i)=>value!==available[i])){
+  const currentSlide=available[index];available=next;index=Math.max(0,available.indexOf(currentSlide));render();
+ }
+}
 const duration=i=>i===0?10:6;
 function show(n){
  const old=index;index=(n+available.length)%available.length;
@@ -79,8 +88,8 @@ Promise.all(slides.slice(1).map((s,i)=>new Promise(resolve=>{
  if(img.complete){resolve(img.naturalWidth>0?i+1:null);return}
  img.addEventListener('load',()=>resolve(i+1),{once:true});
  img.addEventListener('error',()=>resolve(null),{once:true});
-}))).then(found=>{available=[0,...found.filter(v=>v!==null)];render()});
-setInterval(()=>{if(paused||available.length<2)return;remaining--;if(remaining<=0)show(index+1);else render()},1000);
+}))).then(found=>{found.filter(v=>v!==null).forEach(v=>loadedSlides.add(v));refreshAvailable()});
+setInterval(()=>{refreshAvailable();if(paused||available.length<2)return;remaining--;if(remaining<=0)show(index+1);else render()},1000);
 render();
 })();
 </script>
