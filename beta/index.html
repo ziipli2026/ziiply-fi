@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Ziiply – betatestaus (luonnos)</title>
+<style>body{font:16px system-ui,sans-serif;background:#f4f7f6;color:#17333a;margin:0}main{max-width:760px;margin:30px auto;padding:24px;background:white;border-radius:18px}h1{margin-top:0}label{display:block;margin:16px 0 6px}input,select,button{font:inherit;padding:10px;max-width:100%;box-sizing:border-box}input[type=email],input[type=text],select{width:100%}fieldset{border:1px solid #ddd;border-radius:10px;margin-top:20px}fieldset label{margin:8px 0}button{margin-top:18px;background:#126d59;color:white;border:0;border-radius:8px;cursor:pointer}button:disabled{opacity:.5}.muted{color:#64737a}.profile{display:flex;justify-content:space-between;gap:12px;margin:8px 0}#message{margin-top:16px}</style></head>
+<body><main><p class="muted">LUONNOS – ei julkisessa käytössä</p><h1>Tule Ziiplyn betatestaajaksi</h1><p>Etsimme marraskuuksi 400 vapaaehtoista testaajaa eri puolilta Suomea. Testaus on maksutonta eikä sido mihinkään.</p>
+<p id="availability" class="muted">Ilmoittautuminen ei ole vielä avoinna.</p>
+<form id="form"><label for="email">Sähköpostiosoite</label><input id="email" type="email" maxlength="254" required>
+<label for="municipality">Paikkakunta</label><input id="municipality" type="text" maxlength="120" required>
+<label for="profile">Mikä kuvaa sinua parhaiten Ziiplyn käyttäjänä? Valitse yksi.</label><select id="profile" required><option value="">Valitse profiili</option></select>
+<fieldset><legend>Mitä haluaisit testata? Voit valita useita.</legend>
+<label><input type="checkbox" name="interest" value="prices"> Tarjoukset ja hintavertailu</label>
+<label><input type="checkbox" name="interest" value="cart"> Ostoskorit ja ostoslistat</label>
+<label><input type="checkbox" name="interest" value="recipes"> Reseptit</label>
+<label><input type="checkbox" name="interest" value="fuel"> Polttoainehinnat</label>
+<label><input type="checkbox" name="interest" value="family"> Perheen yhteiset listat</label>
+<label><input type="checkbox" name="interest" value="nutrition"> Ravintoarvot</label></fieldset>
+<fieldset><legend>Millä laitteella testaat?</legend><p id="detected" class="muted"></p>
+<label><input type="radio" name="device" value="current" checked> Tällä laitteella</label>
+<label><input type="radio" name="device" value="other"> Toisella laitteella</label>
+<label><input type="radio" name="device" value="both"> Tällä ja toisella laitteella</label>
+<label for="otheros">Muu laite (jos käytössä)</label><select id="otheros"><option value="">Ei valittu</option><option>Android</option><option>iOS</option><option>Windows</option><option>macOS</option><option>Muu</option></select></fieldset>
+<label><input id="consent" type="checkbox" required> Hyväksyn yhteystietojeni käytön betatestaukseen liittyvään yhteydenpitoon tietosuojaselosteen mukaisesti.</label>
+<p class="muted">Tietosuojaselosteen linkki ja säilytysajat on täydennettävä ennen julkaisua.</p>
+<button id="submit" type="submit" disabled>Ilmoittaudu (ei vielä avoinna)</button><p id="message" role="status"></p></form>
+</main><script>
+const ua=navigator.userAgent;const os=/Android/i.test(ua)?'Android':/iPhone|iPad/i.test(ua)?'iOS':/Windows/i.test(ua)?'Windows':/Mac/i.test(ua)?'macOS':'Muu';
+const browser=/Edg\//.test(ua)?'Edge':/Firefox\//.test(ua)?'Firefox':/Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':'Muu';
+const type=/Mobi|Android|iPhone/i.test(ua)?'mobile':'desktop';
+document.querySelector('#detected').textContent='Tunnistettu: '+os+' / '+browser+' ('+type+')';
+fetch('/api/beta').then(async r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{
+const select=document.querySelector('#profile');let free=0;
+for(const p of data.profiles){const o=document.createElement('option');o.value=p.profile_key;o.textContent=p.label_fi+' – '+p.available+' vapaata'+(p.available===0?' (varasija)':'');select.append(o);free+=p.available;}
+document.querySelector('#availability').textContent='Vapaita testipaikkoja yhteensä: '+free+' / 400';
+document.querySelector('#submit').disabled=false;document.querySelector('#submit').textContent='Ilmoittaudu betatestaajaksi';
+}).catch(()=>{});
+document.querySelector('#form').addEventListener('submit',async e=>{
+e.preventDefault();const btn=document.querySelector('#submit');btn.disabled=true;
+try{const payload={email:document.querySelector('#email').value,municipality:document.querySelector('#municipality').value,profile_key:document.querySelector('#profile').value,interests:[...document.querySelectorAll('[name=interest]:checked')].map(x=>x.value),device_choice:document.querySelector('[name=device]:checked').value,other_device_os:document.querySelector('#otheros').value,detected_os:os,detected_browser:browser,detected_device_type:type,privacy_consent:document.querySelector('#consent').checked};
+const r=await fetch('/api/beta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await r.json();
+document.querySelector('#message').textContent=r.ok?(result.status==='waitlist'?'Olet varasijalla.':'Kiitos ilmoittautumisestasi!'):(result.error==='already_registered'?'Sähköpostiosoite on jo ilmoittautunut.':'Ilmoittautuminen ei onnistunut.');}
+catch{document.querySelector('#message').textContent='Yhteysvirhe. Yritä myöhemmin.'}finally{btn.disabled=false}
+});
+</script></body></html>
