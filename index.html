@@ -48,6 +48,11 @@ p{font-size:20px}
 <section class="slide poster" aria-label="Justiinan esittely" data-release-at="2026-10-23T15:00:00Z"><img src="images/Justiina_23_10.png" alt="Justiina – arjen apulainen"></section>
 <section class="slide poster" aria-label="Arvon esittely" data-release-at="2026-10-26T16:02:00Z"><img src="images/ArvoFI_25_10.png" alt="Arvo – Ziiplyn asetukset, ostohistoria ja tilastot"></section>
 
+<section class="slide poster" aria-label="Voi ei – jääkaappi tyhjänä" data-release-at="2026-10-29T07:00:00Z" data-duration="8"><img src="images/ziiply_soppa1_29_10.png" alt="Voi ei! Kaapit tyhjinä ja kymmenen henkeä tulossa syömään"></section>
+<section class="slide poster" aria-label="Tuotteet suoraan reseptistä" data-release-at="2026-10-29T07:00:00Z" data-duration="12"><img src="images/ziiply_soppa2_29_10.jpeg" alt="Ziiply hakee reseptin ainesosat ja tuotteet"></section>
+<section class="slide poster" aria-label="Reseptistä ostoskoriin" data-release-at="2026-10-29T07:00:00Z" data-duration="10"><img src="images/ziiply_soppa3_29_10.png" alt="Makkarakeiton ainesosat ostoskorissa"></section>
+<section class="slide poster" aria-label="Kauppojen hintavertailu" data-release-at="2026-10-29T07:00:00Z" data-duration="12"><img src="images/ziiply_soppa4_29_10.jpeg" alt="Kahden kaupan ostoskorien hintavertailu"></section>
+
 <div class="controls" aria-label="Esityksen ohjaimet">
 <button id="prev" type="button" aria-label="Edellinen dia">❮</button>
 <span id="countdown" aria-live="off">Esittely alkaa 10 s / Presentation in 10 s</span>
@@ -69,7 +74,7 @@ function refreshAvailable(){
   const currentSlide=available[index];available=next;index=Math.max(0,available.indexOf(currentSlide));render();
  }
 }
-const duration=i=>i===0?10:6;
+const duration=i=>available[i]===0?10:Number(slides[available[i]].dataset.duration||6);
 function show(n){
  const old=index;index=(n+available.length)%available.length;
  slides.forEach((s,i)=>{s.classList.remove('active','previous');if(i===available[old]&&old!==index)s.classList.add('previous');if(i===available[index])s.classList.add('active')});
