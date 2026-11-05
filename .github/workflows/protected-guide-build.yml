@@ -20,6 +20,8 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Validate account generator
+        run: node scripts/test-accounts.mjs
       - name: Build
         env:
           GUIDE_DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
