@@ -1,6 +1,11 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { neon } from '@neondatabase/serverless';
-export const sql = neon(process.env.GUIDE_DATABASE_URL);
+let client;
+export function sql(strings, ...values) {
+ if (!process.env.GUIDE_DATABASE_URL) throw new Error('GUIDE_DATABASE_URL is not configured');
+ client ??= neon(process.env.GUIDE_DATABASE_URL);
+ return client(strings, ...values);
+}
 export function hashPassword(password, salt) { return scryptSync(password, Buffer.from(salt, 'hex'), 64).toString('hex'); }
 export function verifyPassword(password, salt, expected) {
  const actual=Buffer.from(hashPassword(password,salt),'hex'), target=Buffer.from(expected,'hex');
