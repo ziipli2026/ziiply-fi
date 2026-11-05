@@ -27,3 +27,9 @@ CREATE TABLE IF NOT EXISTS guide_assets (
  contents bytea NOT NULL,
  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS guide_pages (
+ page_key text PRIMARY KEY,
+ html text NOT NULL,
+ updated_at timestamptz NOT NULL DEFAULT now()
+);
