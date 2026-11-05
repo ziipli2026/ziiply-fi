@@ -20,3 +20,10 @@ CREATE TABLE IF NOT EXISTS guide_login_limits (
  locked_until timestamptz
 );
 CREATE INDEX IF NOT EXISTS guide_login_limits_locked_idx ON guide_login_limits(locked_until);
+
+CREATE TABLE IF NOT EXISTS guide_assets (
+ asset_name text PRIMARY KEY,
+ mime_type text NOT NULL CHECK (mime_type IN ('image/png','image/jpeg','image/webp','image/gif')),
+ contents bytea NOT NULL,
+ created_at timestamptz NOT NULL DEFAULT now()
+);
