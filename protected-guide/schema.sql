@@ -12,3 +12,11 @@ CREATE TABLE IF NOT EXISTS guide_sessions (
  expires_at timestamptz NOT NULL
 );
 CREATE INDEX IF NOT EXISTS guide_sessions_expires_idx ON guide_sessions(expires_at);
+
+CREATE TABLE IF NOT EXISTS guide_login_limits (
+ username text PRIMARY KEY,
+ attempts integer NOT NULL DEFAULT 0,
+ window_start timestamptz NOT NULL DEFAULT now(),
+ locked_until timestamptz
+);
+CREATE INDEX IF NOT EXISTS guide_login_limits_locked_idx ON guide_login_limits(locked_until);
