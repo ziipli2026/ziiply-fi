@@ -28,6 +28,13 @@ p{font-size:20px}
 #countdown{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);font-size:20px;color:#333;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none} .stage:not(.on-welcome) #countdown{display:none}
 @media(max-width:600px){h1{font-size:52px}p{font-size:18px}.welcome-inner{padding-top:8vh}.controls{font-size:14px;gap:5px}#countdown{font-size:14px;bottom:85px}}
 @media(prefers-reduced-motion:reduce){.slide{transition:none}}
+
+.story{background:linear-gradient(150deg,#081a13,#143f29);color:#f4fff1;text-align:center;padding:clamp(20px,5vw,72px)}
+.story-inner{max-width:880px;margin:auto}
+.story h2{font-size:clamp(28px,5vw,58px);line-height:1.18;margin:0 0 24px;font-weight:800}
+.story p{font-size:clamp(19px,3vw,33px);line-height:1.42;margin:12px auto}
+.story .brand{color:#9aff9c}
+.story .site{font-size:clamp(25px,4vw,44px);font-weight:800}
 </style>
 </head>
 <body>
@@ -59,6 +66,16 @@ p{font-size:20px}
 <section class="slide poster" aria-label="Ruokavalio, uni ja liikunta yhdessä Ziiplyssä" data-release-at="2026-11-01T08:15:00Z" data-duration="12"><img src="images/ziiply_insta4_1_11.png" alt="Ruokavalio, uni ja liikunta yhdessä Ziiplyssä"></section>
 <section class="slide poster" aria-label="Ziiplyn tuleva suunta – tilaaminen ja Scan & Go" data-release-at="2026-11-01T08:15:00Z" data-duration="12"><img src="images/ziiply_insta5_1_11.png" alt="Ziiplyn tuleva suunta – tilaaminen ja Scan & Go"></section>
 
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><div class="story-inner"><h2>🚗💨 RATISSA KUSKI.<br>VIERESSÄ PAREMPI KUSKI. 😂</h2><p>Ziiply pitää molemmat ajan tasalla!</p></div></section>
+<section class="slide poster" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><img src="images/ziiply_6_11-nopeusnaytto.jpg" alt="Ziiplyn nopeusnäyttö"></section>
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><div class="story-inner"><p>🌤️ Sää hallinnassa</p><p>🚦 Nopeus ja rajoitukset näkyvissä</p><p>⛽ Polttoaineen hinnat mukana</p></div></section>
+<section class="slide poster" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><img src="images/ziiply_6_11-kauppaan-saapuminen.jpg" alt="Ziiplyn kauppaan saapumisen tunnistus"></section>
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="5"><div class="story-inner"><p>🛒 Kauppaan saapuminen tunnistetaan pysähdyksen jälkeen.</p></div></section>
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="6"><div class="story-inner"><h2>Ja sitten se tärkein:</h2><p>”Katsotaanko tarjoukset?” 👀</p><p>Tai lisätäänkö reseptit ja ostoslistat?</p></div></section>
+<section class="slide poster" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><img src="images/ziiply_6_11-reseptit-ja-ostoslista.jpg" alt="Ziiplyn reseptit ja ostoslista"></section>
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><div class="story-inner"><p>Vähemmän säätöä.</p><p>Enemmän järkeä ruokaostoksiin.</p><p>Kätevää ja vaivatonta, eiköstä juu? 😎</p></div></section>
+<section class="slide poster" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><img src="images/ziiply_6_11-tarjoukset.jpg" alt="Ziiplyn tarjoukset"></section>
+<section class="slide story" data-release-at="2026-11-06T16:45:00Z" data-duration="7"><div class="story-inner"><h2 class="brand">💚 Ziiply – One search. All offers.</h2><p class="site">ziiply.fi</p></div></section>
 <div class="controls" aria-label="Esityksen ohjaimet">
 <button id="prev" type="button" aria-label="Edellinen dia">❮</button>
 <span id="countdown" aria-live="off">Esittely alkaa 10 s / Presentation in 10 s</span>
@@ -97,6 +114,7 @@ pause.addEventListener('click',()=>{paused=!paused;render()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)paused=true;render()});
 Promise.all(slides.slice(1).map((s,i)=>new Promise(resolve=>{
  const img=s.querySelector('img');
+ if(!img){resolve(i+1);return}
  if(img.complete){resolve(img.naturalWidth>0?i+1:null);return}
  img.addEventListener('load',()=>resolve(i+1),{once:true});
  img.addEventListener('error',()=>resolve(null),{once:true});
