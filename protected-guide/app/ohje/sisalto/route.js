@@ -46,6 +46,51 @@ export async function GET(request){
  footer{flex:0 0 auto!important;padding:2px 8px!important}
 }
 </style>`;
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>'):rows[0].html.replace('</body>',preload+'</body>');
+ const desktopStabilizer = `<script id="ziiply-desktop-layout-stabilizer">
+(function(){
+ if(window.matchMedia('(max-width:700px)').matches)return;
+ function lock(){
+   const main=document.querySelector('main');
+   if(!main)return;
+   const image=[...main.querySelectorAll('img')].find(i=>i.closest('.viewer,#viewer'))||[...main.querySelectorAll('img')].sort((a,b)=>(b.naturalWidth*b.naturalHeight)-(a.naturalWidth*a.naturalHeight))[0];
+   if(!image)return;
+   let stage=image;
+   while(stage.parentElement&&stage.parentElement!==main)stage=stage.parentElement;
+   if(stage.parentElement!==main)return;
+   main.style.setProperty('display','flex','important');
+   main.style.setProperty('flex-direction','column','important');
+   main.style.setProperty('min-height','0','important');
+   main.style.setProperty('overflow','hidden','important');
+   for(const child of [...main.children]){
+     child.style.setProperty('box-sizing','border-box','important');
+     child.style.setProperty('min-height','0','important');
+     if(child===stage){
+       child.style.setProperty('flex','1 1 0px','important');
+       child.style.setProperty('height','0px','important');
+       child.style.setProperty('overflow','hidden','important');
+       continue;
+     }
+     if(!child.dataset.ziiplyFixedHeight){
+       const rect=child.getBoundingClientRect();
+       const hasControls=!!child.querySelector('button,select,input');
+       const hasText=(child.innerText||'').trim().length>0;
+       const minimum=hasControls?44:hasText?Math.max(86,rect.height):Math.max(8,rect.height);
+       child.dataset.ziiplyFixedHeight=String(Math.ceil(minimum));
+     }
+     const px=child.dataset.ziiplyFixedHeight+'px';
+     child.style.setProperty('flex','0 0 '+px,'important');
+     child.style.setProperty('height',px,'important');
+     child.style.setProperty('min-height',px,'important');
+     child.style.setProperty('max-height',px,'important');
+     child.style.setProperty('overflow','auto','important');
+   }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',lock,{once:true});else lock();
+ window.addEventListener('load',lock,{once:true});
+ window.addEventListener('resize',lock);
+})();
+</script>`;
+
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
