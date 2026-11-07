@@ -33,17 +33,17 @@ export async function GET(request){
  const desktopLayout = `<style id="ziiply-desktop-fixed-layout">
 @media (min-width:701px) {
  html,body{height:100%;height:100dvh;overflow:hidden}
- body{display:flex;flex-direction:column;min-height:0}
- header{flex:0 0 auto;padding-top:5px;padding-bottom:4px}
- main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding-top:3px;padding-bottom:5px}
- .viewer{flex:1 1 auto;min-height:0;height:auto!important;max-height:none!important}
- .viewer:not(.zoom){overflow:hidden}
+ body{display:flex!important;flex-direction:column!important;min-height:0!important}
+ header{flex:0 0 auto!important;padding-top:5px!important;padding-bottom:4px!important}
+ main{flex:1 1 0!important;min-height:0!important;min-width:0;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding-top:3px!important;padding-bottom:5px!important}
+ main>.viewer,#viewer{flex:1 1 0!important;min-height:0!important;height:0!important;max-height:none!important;overflow:hidden}
+ main>.viewer.zoom,#viewer.zoom{overflow:auto!important}
  .viewer:not(.zoom) img{max-height:100%;object-fit:contain}
- .controls{flex:0 0 auto;padding:5px 2px}
- .caption{flex:0 0 auto;box-sizing:border-box;height:2.6em!important;min-height:2.6em!important;max-height:2.6em!important;overflow:auto;margin:2px 0}
- .slide-description{flex:0 0 auto;box-sizing:border-box;height:4.05em!important;min-height:4.05em!important;max-height:4.05em!important;overflow:auto;margin:2px auto 0}
- main>div[style*="text-align:center"]{flex:0 0 auto;padding:3px!important}
- footer{flex:0 0 auto;padding:2px 8px}
+ main>.controls,.controls{flex:0 0 43px!important;box-sizing:border-box!important;height:43px!important;min-height:43px!important;max-height:43px!important;padding:5px 2px!important;margin:0!important}
+ main>.caption,.caption{flex:0 0 45px!important;box-sizing:border-box!important;height:45px!important;min-height:45px!important;max-height:45px!important;overflow:auto!important;margin:0!important;padding:5px 0!important}
+ main>.slide-description,.slide-description{flex:0 0 90px!important;box-sizing:border-box!important;height:90px!important;min-height:90px!important;max-height:90px!important;overflow:auto!important;margin:0 auto!important;padding:8px 14px!important}
+ main>div[style*="text-align:center"]{flex:0 0 37px!important;box-sizing:border-box!important;height:37px!important;min-height:37px!important;max-height:37px!important;padding:3px!important;margin:0!important}
+ footer{flex:0 0 auto!important;padding:2px 8px!important}
 }
 </style>`;
  const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>'):rows[0].html.replace('</body>',preload+'</body>');
