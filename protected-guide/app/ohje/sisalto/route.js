@@ -91,42 +91,51 @@ export async function GET(request){
 })();
 </script>`;
 
- const slide39LeftImage = `<script id="ziiply-slide39-left-image-only">
+ const slide39LeftImage = `<script id="ziiply-slide39-authentic-left">
 (function(){
- const replacement='/ohje/gosta-original';
- let overlay=null;
- function update(){
-  const picture=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
-  if(!picture||!viewer||!jump)return;
-  if(Number(jump.value)!==38){if(overlay){overlay.remove();overlay=null;}return;}
-  if(!overlay){
-   overlay=document.createElement('img');
-   overlay.src=replacement;
-   overlay.alt='Alkuperäinen Göstan tarjousvahtikuva';
-   overlay.style.cssText='position:absolute;z-index:2;object-fit:contain;object-position:center center;background:#fffaf0;border-radius:12px;pointer-events:none;';
-   viewer.appendChild(overlay);
+ const src='/ohje/gosta-original';
+ let left=null, avatarMask=null;
+ function place(){
+  const image=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
+  if(!image||!viewer||!jump)return;
+  const active=Number(jump.value)===38;
+  if(!active){left?.remove();avatarMask?.remove();left=null;avatarMask=null;return;}
+  if(!image.naturalWidth||!image.naturalHeight)return;
+  if(!left){
+   left=document.createElement('div');
+   left.id='ziiply-gosta-authentic-left';
+   left.style.cssText='position:absolute;z-index:5;overflow:hidden;background:#fffaf0;display:flex;align-items:center;justify-content:center;pointer-events:none;';
+   const actual=document.createElement('img');
+   actual.src=src;
+   actual.alt='Göstan alkuperäinen tarjousvahtinäkymä';
+   actual.style.cssText='display:block;position:static!important;transform:none!important;width:auto!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;';
+   left.appendChild(actual);
+   viewer.appendChild(left);
   }
-  const box=picture.getBoundingClientRect(),frame=viewer.getBoundingClientRect();
-  if(!picture.naturalWidth||!picture.naturalHeight)return;
-  const scale=Math.min(box.width/picture.naturalWidth,box.height/picture.naturalHeight);
-  const width=picture.naturalWidth*scale,height=picture.naturalHeight*scale;
-  const x=box.left-frame.left+(box.width-width)/2;
-  const y=box.top-frame.top+(box.height-height)/2;
-  // Cover the ENTIRE fabricated phone/frame in the left panel with the user's original screenshot.
-  // Preserve the complete right-hand instruction panel.
-  Object.assign(overlay.style,{
-   left:(x+width*0.029)+'px',top:(y+height*0.221)+'px',
-   width:(width*0.383)+'px',height:(height*0.672)+'px'
-  });
+  if(!avatarMask){
+   avatarMask=document.createElement('div');
+   avatarMask.id='ziiply-gosta-fabricated-avatar-mask';
+   avatarMask.style.cssText='position:absolute;z-index:5;background:#fffaf0;pointer-events:none;';
+   viewer.appendChild(avatarMask);
+  }
+  const rect=image.getBoundingClientRect(),frame=viewer.getBoundingClientRect();
+  const scale=Math.min(rect.width/image.naturalWidth,rect.height/image.naturalHeight);
+  const w=image.naturalWidth*scale,h=image.naturalHeight*scale;
+  const x=rect.left-frame.left+(rect.width-w)/2;
+  const y=rect.top-frame.top+(rect.height-h)/2;
+  // Replace the full fabricated phone and frame, not just the screen.
+  Object.assign(left.style,{left:(x+w*0.025)+'px',top:(y+h*0.214)+'px',width:(w*0.395)+'px',height:(h*0.689)+'px'});
+  // Hide only the fabricated portrait in the top-left title strip; preserve heading and right-side instructions.
+  Object.assign(avatarMask.style,{left:(x+w*0.028)+'px',top:(y+h*0.110)+'px',width:(w*0.080)+'px',height:(h*0.095)+'px'});
  }
  function start(){
-  const picture=document.getElementById('picture');if(!picture)return;
-  picture.addEventListener('load',update);
-  new MutationObserver(update).observe(picture,{attributes:true,attributeFilter:['src']});
-  window.addEventListener('resize',update);
-  document.getElementById('jump')?.addEventListener('change',()=>requestAnimationFrame(update));
-  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(update));
-  update();
+  const image=document.getElementById('picture');if(!image)return;
+  image.addEventListener('load',place);
+  new MutationObserver(place).observe(image,{attributes:true,attributeFilter:['src']});
+  window.addEventListener('resize',place);
+  document.getElementById('jump')?.addEventListener('change',()=>requestAnimationFrame(place));
+  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(place));
+  place();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
