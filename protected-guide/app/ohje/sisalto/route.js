@@ -91,61 +91,79 @@ export async function GET(request){
 })();
 </script>`;
 
- const slide39LeftImage = `<script id="ziiply-slide39-clean-layout">
+ const slide39LeftImage = `<script id="ziiply-slide39-measured-layout">
 (function(){
  let composition=null,original=null,oldStyle=null;
  const realSrc='/ohje/gosta-original';
  function restore(){
   if(composition){composition.remove();composition=null;}
-  if(original&&oldStyle!==null){original.setAttribute('style',oldStyle);oldStyle=null;}
-  original=null;
+  if(original&&oldStyle!==null)original.setAttribute('style',oldStyle);
+  original=null;oldStyle=null;
  }
  function render(){
   const img=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
   if(!img||!viewer||!jump)return;
   if(Number(jump.value)!==38){restore();return;}
   if(!img.complete||!img.naturalWidth)return;
-  if(original&&original!==img)restore();
   if(composition)return;
   original=img;oldStyle=img.getAttribute('style')||'';
   img.style.display='none';
-  composition=document.createElement('div');
+  composition=document.createElement('section');
   composition.id='ziiply-slide39-rebuilt';
-  composition.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:1.6%;background:#fff9eb;overflow:hidden;';
-  const heading=document.createElement('div');
-  heading.style.cssText='flex:0 0 10%;min-height:0;display:flex;align-items:center;box-sizing:border-box;border:1px solid #c49d54;border-radius:8px;padding:0.5% 1.5%;gap:1.5%;color:#164b3a;';
+  composition.style.cssText='position:absolute;inset:0;box-sizing:border-box;padding:1.6%;display:flex;flex-direction:column;gap:1.4%;background:#fff9eb;overflow:hidden;container-type:size;font-family:system-ui,Arial,sans-serif;color:#164b3a;';
+  const heading=document.createElement('header');
+  heading.style.cssText='flex:0 0 9%;min-height:0;display:flex;align-items:center;gap:1.5%;border:1px solid #c49d54;border-radius:8px;padding:0.3% 1.4%;box-sizing:border-box;';
   const avatar=document.createElement('canvas');
   avatar.width=180;avatar.height=180;
-  avatar.style.cssText='height:85%;width:auto;aspect-ratio:1;border-radius:50%;flex-shrink:0;';
-  const headingText=document.createElement('div');
-  headingText.style.cssText='font:700 clamp(10px,2.1vw,28px) system-ui;line-height:1.2;';
+  avatar.style.cssText='height:88%;aspect-ratio:1;width:auto;border-radius:50%;flex-shrink:0;';
+  const headingText=document.createElement('span');
+  headingText.style.cssText='font-size:3.2cqh;font-weight:800;line-height:1.15;';
   headingText.textContent='GÖSTA – TARJOUSVAHTI';
   heading.append(avatar,headingText);
   const columns=document.createElement('div');
-  columns.style.cssText='flex:1;min-height:0;display:flex;gap:1.5%;padding-top:1.2%;';
+  columns.style.cssText='flex:1;min-height:0;display:grid;grid-template-columns:40% minmax(0,1fr);gap:1.4%;align-items:stretch;';
   const left=document.createElement('div');
-  left.style.cssText='flex:0 0 40%;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
+  left.style.cssText='min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
   const authentic=document.createElement('img');
   authentic.src=realSrc;authentic.alt='Alkuperäinen Göstan tarjousvahtinäkymä';
   authentic.style.cssText='display:block!important;position:static!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;transform:none!important;';
   left.appendChild(authentic);
   const right=document.createElement('div');
-  right.style.cssText='flex:1;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
-  const canvas=document.createElement('canvas');
-  // Original instruction panel only; include its full top and bottom edges.
-  const sx=Math.round(img.naturalWidth*.418),sy=Math.round(img.naturalHeight*.213);
-  const sw=Math.round(img.naturalWidth*.565),sh=Math.round(img.naturalHeight*.690);
-  canvas.width=sw;canvas.height=sh;
-  canvas.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,sw,sh);
-  canvas.style.cssText='display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;';
-  right.appendChild(canvas);
+  right.style.cssText='min-width:0;min-height:0;box-sizing:border-box;border:1px solid #2d604c;border-radius:9px;background:#eaf4e9;padding:3% 3.5%;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;';
+  const title=document.createElement('div');
+  title.style.cssText='font-size:3.2cqh;line-height:1.12;font-weight:800;margin-bottom:1%;';
+  title.textContent='Näin käytät Göstan tarjousvahtia';
+  right.appendChild(title);
+  const items=[
+   ['Avaa Göstan tarjousvahti','Siirry etusivulla Göstan kohtaan ja avaa Tarjousvahti.'],
+   ['Kirjoita tuote tai hakusana','Kirjoita tuotteen nimi tai hakusana, jonka tarjouksia haluat seurata.'],
+   ['Paina Tallenna','Tallenna tuote tai hakusana painamalla Tallenna-painiketta.'],
+   ['Näe tallennetut tarjousvahdit','Avaa tallennetut haut muistikirja-kuvakkeesta. Voit poistaa hakusanoja listasta.']
+  ];
+  items.forEach((item,i)=>{
+   const line=document.createElement('div');
+   line.style.cssText='display:grid;grid-template-columns:12% minmax(0,1fr);gap:2%;align-items:start;';
+   const num=document.createElement('span');
+   num.style.cssText='display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:50%;background:#064c34;color:white;font-size:2.5cqh;font-weight:700;';
+   num.textContent=String(i+1);
+   const content=document.createElement('div');
+   const strong=document.createElement('div');
+   strong.style.cssText='font-size:2.45cqh;line-height:1.12;font-weight:800;';
+   strong.textContent=item[0];
+   const detail=document.createElement('div');
+   detail.style.cssText='font-size:2.0cqh;line-height:1.17;color:#273c34;';
+   detail.textContent=item[1];
+   content.append(strong,detail);line.append(num,content);right.appendChild(line);
+  });
+  const info=document.createElement('div');
+  info.style.cssText='box-sizing:border-box;background:#fff0c9;border:1px solid #d7b16b;border-radius:7px;padding:2% 2.5%;font-size:1.85cqh;line-height:1.22;color:#283d35;';
+  info.textContent='ⓘ Tarjousvahdit tallennetaan tähän selaimeen. Automaattiset tarjousilmoitukset eivät ole vielä käytössä.';
+  right.appendChild(info);
   columns.append(left,right);composition.append(heading,columns);viewer.appendChild(composition);
   const source=new Image();
   source.onload=()=>{
    if(!composition)return;
-   const size=Math.round(source.naturalWidth*.145);
-   const x=Math.round(source.naturalWidth*.075);
-   const y=Math.round(source.naturalHeight*.215);
+   const size=Math.round(source.naturalWidth*.145),x=Math.round(source.naturalWidth*.075),y=Math.round(source.naturalHeight*.215);
    avatar.getContext('2d').drawImage(source,x,y,size,size,0,0,180,180);
   };
   source.src=realSrc;
