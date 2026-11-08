@@ -91,7 +91,7 @@ export async function GET(request){
 })();
 </script>`;
 
- const slide39LeftImage = `<script id="ziiply-slide39-remove-fabricated-elements">
+ const slide39LeftImage = `<script id="ziiply-slide39-clean-layout">
 (function(){
  let composition=null,original=null,oldStyle=null;
  const realSrc='/ohje/gosta-original';
@@ -108,32 +108,21 @@ export async function GET(request){
   if(original&&original!==img)restore();
   if(composition)return;
   original=img;oldStyle=img.getAttribute('style')||'';
-  // The fabricated phone and avatar are REMOVED from the visible slide, not covered.
-  // Only the authentic right-side instruction region is retained from the old source.
   img.style.display='none';
   composition=document.createElement('div');
   composition.id='ziiply-slide39-rebuilt';
-  composition.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:2%;background:#fff9eb;overflow:hidden;';
+  composition.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:1.6%;background:#fff9eb;overflow:hidden;';
   const heading=document.createElement('div');
-  heading.style.cssText='flex:0 0 12%;display:flex;align-items:center;box-sizing:border-box;border:2px solid #c49d54;border-radius:12px;padding:0 2%;font:bold clamp(13px,2.4vw,34px) system-ui;color:#164b3a;';
+  heading.style.cssText='flex:0 0 10%;min-height:0;display:flex;align-items:center;box-sizing:border-box;border:1px solid #c49d54;border-radius:8px;padding:0.5% 1.5%;gap:1.5%;color:#164b3a;';
   const avatar=document.createElement('canvas');
-  avatar.id='ziiply-gosta-real-avatar';
   avatar.width=180;avatar.height=180;
-  avatar.style.cssText='height:82%;width:auto;aspect-ratio:1;border-radius:50%;margin-right:2%;object-fit:contain;flex-shrink:0;';
-  const headingText=document.createElement('span');
+  avatar.style.cssText='height:85%;width:auto;aspect-ratio:1;border-radius:50%;flex-shrink:0;';
+  const headingText=document.createElement('div');
+  headingText.style.cssText='font:700 clamp(10px,2.1vw,28px) system-ui;line-height:1.2;';
   headingText.textContent='GÖSTA – TARJOUSVAHTI';
   heading.append(avatar,headingText);
-  // Extract the genuine Gösta portrait from the user-supplied screenshot, never the old slide.
-  const source=new Image();
-  source.onload=()=>{
-   const size=Math.round(source.naturalWidth*.145);
-   const x=Math.round(source.naturalWidth*.075);
-   const y=Math.round(source.naturalHeight*.215);
-   avatar.getContext('2d').drawImage(source,x,y,size,size,0,0,180,180);
-  };
-  source.src=realSrc;
   const columns=document.createElement('div');
-  columns.style.cssText='flex:1;min-height:0;display:flex;gap:1.5%;padding-top:1%;';
+  columns.style.cssText='flex:1;min-height:0;display:flex;gap:1.5%;padding-top:1.2%;';
   const left=document.createElement('div');
   left.style.cssText='flex:0 0 40%;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
   const authentic=document.createElement('img');
@@ -143,15 +132,23 @@ export async function GET(request){
   const right=document.createElement('div');
   right.style.cssText='flex:1;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
   const canvas=document.createElement('canvas');
-  // Crop ONLY the existing genuine instruction panel, excluding the entire fake phone and avatar.
+  // Original instruction panel only; include its full top and bottom edges.
   const sx=Math.round(img.naturalWidth*.418),sy=Math.round(img.naturalHeight*.213);
-  const sw=Math.round(img.naturalWidth*.565),sh=Math.round(img.naturalHeight*.69);
+  const sw=Math.round(img.naturalWidth*.565),sh=Math.round(img.naturalHeight*.690);
   canvas.width=sw;canvas.height=sh;
   canvas.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,sw,sh);
   canvas.style.cssText='display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;';
   right.appendChild(canvas);
-  columns.append(left,right);composition.append(heading,columns);
-  viewer.appendChild(composition);
+  columns.append(left,right);composition.append(heading,columns);viewer.appendChild(composition);
+  const source=new Image();
+  source.onload=()=>{
+   if(!composition)return;
+   const size=Math.round(source.naturalWidth*.145);
+   const x=Math.round(source.naturalWidth*.075);
+   const y=Math.round(source.naturalHeight*.215);
+   avatar.getContext('2d').drawImage(source,x,y,size,size,0,0,180,180);
+  };
+  source.src=realSrc;
  }
  function start(){
   const img=document.getElementById('picture');if(!img)return;
