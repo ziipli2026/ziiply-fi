@@ -103,7 +103,7 @@ export async function GET(request){
    overlay=document.createElement('img');
    overlay.src=replacement;
    overlay.alt='Alkuperäinen Göstan tarjousvahtikuva';
-   overlay.style.cssText='position:absolute;z-index:2;object-fit:cover;object-position:center top;border-radius:3%;pointer-events:none;';
+   overlay.style.cssText='position:absolute;z-index:2;object-fit:contain;object-position:center center;background:#fffaf0;border-radius:12px;pointer-events:none;';
    viewer.appendChild(overlay);
   }
   const box=picture.getBoundingClientRect(),frame=viewer.getBoundingClientRect();
@@ -112,11 +112,11 @@ export async function GET(request){
   const width=picture.naturalWidth*scale,height=picture.naturalHeight*scale;
   const x=box.left-frame.left+(box.width-width)/2;
   const y=box.top-frame.top+(box.height-height)/2;
-  // Only the phone-screen area in the LEFT column is replaced.
-  // The title, phone frame, entire RIGHT instruction panel and all other slides stay untouched.
+  // Cover the ENTIRE fabricated phone/frame in the left panel with the user's original screenshot.
+  // Preserve the complete right-hand instruction panel.
   Object.assign(overlay.style,{
-   left:(x+width*0.087)+'px',top:(y+height*0.222)+'px',
-   width:(width*0.273)+'px',height:(height*0.643)+'px'
+   left:(x+width*0.029)+'px',top:(y+height*0.221)+'px',
+   width:(width*0.383)+'px',height:(height*0.672)+'px'
   });
  }
  function start(){
