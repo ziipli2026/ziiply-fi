@@ -91,6 +91,28 @@ export async function GET(request){
 })();
 </script>`;
 
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
+ const mobileFixedLayout = `<style id="ziiply-mobile-guide-no-page-scroll">
+html,body{height:100%!important;height:100dvh!important;overflow:hidden!important}
+body{display:flex!important;flex-direction:column!important;min-height:0!important}
+header{flex:0 0 auto!important;padding-top:5px!important;padding-bottom:4px!important}
+main{flex:1 1 0!important;min-height:0!important;min-width:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding-top:3px!important;padding-bottom:3px!important}
+#viewer{flex:1 1 0!important;min-height:0!important;height:0!important;max-height:none!important;overflow:hidden}
+#viewer.zoom{overflow:auto!important}
+#viewer:not(.zoom) img{max-height:100%!important;object-fit:contain!important}
+main>div[style*="text-align:center"]{flex:0 0 auto!important;padding:3px!important}
+.controls{flex:0 0 auto!important;padding:4px 2px!important;margin:0!important}
+.caption{flex:0 0 auto!important;min-height:0!important;max-height:2.5em!important;margin:2px 0!important;overflow:auto!important}
+.slide-description{flex:0 0 auto!important;box-sizing:border-box!important;height:4.05em!important;min-height:4.05em!important;max-height:4.05em!important;margin:2px auto!important;overflow:auto!important}
+footer{flex:0 0 auto!important;padding:2px 8px!important}
+@media(max-height:700px){
+header{padding-top:2px!important;padding-bottom:2px!important}
+.controls{padding:2px!important}
+.controls button{padding:5px 8px!important}
+.caption{max-height:1.6em!important}
+.slide-description{height:3.75em!important;min-height:3.75em!important;max-height:3.75em!important}
+footer{display:none!important}
+}
+</style>`;
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</head>',mobileFixedLayout+'</head>').replace('</body>',preload+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
