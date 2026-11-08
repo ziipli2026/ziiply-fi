@@ -116,7 +116,22 @@ export async function GET(request){
   composition.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:2%;background:#fff9eb;overflow:hidden;';
   const heading=document.createElement('div');
   heading.style.cssText='flex:0 0 12%;display:flex;align-items:center;box-sizing:border-box;border:2px solid #c49d54;border-radius:12px;padding:0 2%;font:bold clamp(13px,2.4vw,34px) system-ui;color:#164b3a;';
-  heading.textContent='GÖSTA – TARJOUSVAHTI';
+  const avatar=document.createElement('canvas');
+  avatar.id='ziiply-gosta-real-avatar';
+  avatar.width=180;avatar.height=180;
+  avatar.style.cssText='height:82%;width:auto;aspect-ratio:1;border-radius:50%;margin-right:2%;object-fit:contain;flex-shrink:0;';
+  const headingText=document.createElement('span');
+  headingText.textContent='GÖSTA – TARJOUSVAHTI';
+  heading.append(avatar,headingText);
+  // Extract the genuine Gösta portrait from the user-supplied screenshot, never the old slide.
+  const source=new Image();
+  source.onload=()=>{
+   const size=Math.round(source.naturalWidth*.145);
+   const x=Math.round(source.naturalWidth*.075);
+   const y=Math.round(source.naturalHeight*.215);
+   avatar.getContext('2d').drawImage(source,x,y,size,size,0,0,180,180);
+  };
+  source.src=realSrc;
   const columns=document.createElement('div');
   columns.style.cssText='flex:1;min-height:0;display:flex;gap:1.5%;padding-top:1%;';
   const left=document.createElement('div');
