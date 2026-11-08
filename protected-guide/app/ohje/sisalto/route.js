@@ -91,6 +91,30 @@ export async function GET(request){
 })();
 </script>`;
 
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
+ const slide39Fix = `<script id="ziiply-mobile-slide39-fix">
+(function(){
+ const imageUrl='/ohje/gosta-original';
+ function apply(){
+  const jump=document.getElementById('jump'),picture=document.getElementById('picture');
+  if(!jump||!picture)return;
+  if(Number(jump.value)!==38)return;
+  if(picture.dataset.originalGosta39==='yes')return;
+  picture.src=imageUrl;
+  picture.alt='Göstan alkuperäinen tarjousvahtinäkymä';
+  picture.dataset.originalGosta39='yes';
+ }
+ function reset(){const p=document.getElementById('picture');if(p&&Number(document.getElementById('jump')?.value)!==38)delete p.dataset.originalGosta39;}
+ function start(){
+  const p=document.getElementById('picture');
+  if(!p)return;
+  new MutationObserver(()=>{reset();apply()}).observe(p,{attributes:true,attributeFilter:['src']});
+  document.getElementById('jump')?.addEventListener('change',()=>setTimeout(apply,0));
+  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>setTimeout(apply,0));
+  apply();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>`;
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+slide39Fix+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
