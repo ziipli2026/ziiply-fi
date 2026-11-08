@@ -91,51 +91,60 @@ export async function GET(request){
 })();
 </script>`;
 
- const slide39LeftImage = `<script id="ziiply-slide39-authentic-left">
+ const slide39LeftImage = `<script id="ziiply-slide39-remove-fabricated-elements">
 (function(){
- const src='/ohje/gosta-original';
- let left=null, avatarMask=null;
- function place(){
-  const image=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
-  if(!image||!viewer||!jump)return;
-  const active=Number(jump.value)===38;
-  if(!active){left?.remove();avatarMask?.remove();left=null;avatarMask=null;return;}
-  if(!image.naturalWidth||!image.naturalHeight)return;
-  if(!left){
-   left=document.createElement('div');
-   left.id='ziiply-gosta-authentic-left';
-   left.style.cssText='position:absolute;z-index:5;overflow:hidden;background:#fffaf0;display:flex;align-items:center;justify-content:center;pointer-events:none;';
-   const actual=document.createElement('img');
-   actual.src=src;
-   actual.alt='Göstan alkuperäinen tarjousvahtinäkymä';
-   actual.style.cssText='display:block;position:static!important;transform:none!important;width:auto!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;';
-   left.appendChild(actual);
-   viewer.appendChild(left);
-  }
-  if(!avatarMask){
-   avatarMask=document.createElement('div');
-   avatarMask.id='ziiply-gosta-fabricated-avatar-mask';
-   avatarMask.style.cssText='position:absolute;z-index:5;background:#fffaf0;pointer-events:none;';
-   viewer.appendChild(avatarMask);
-  }
-  const rect=image.getBoundingClientRect(),frame=viewer.getBoundingClientRect();
-  const scale=Math.min(rect.width/image.naturalWidth,rect.height/image.naturalHeight);
-  const w=image.naturalWidth*scale,h=image.naturalHeight*scale;
-  const x=rect.left-frame.left+(rect.width-w)/2;
-  const y=rect.top-frame.top+(rect.height-h)/2;
-  // Replace the full fabricated phone and frame, not just the screen.
-  Object.assign(left.style,{left:(x+w*0.025)+'px',top:(y+h*0.214)+'px',width:(w*0.395)+'px',height:(h*0.689)+'px'});
-  // Hide only the fabricated portrait in the top-left title strip; preserve heading and right-side instructions.
-  Object.assign(avatarMask.style,{left:(x+w*0.028)+'px',top:(y+h*0.110)+'px',width:(w*0.080)+'px',height:(h*0.095)+'px'});
+ let composition=null,original=null,oldStyle=null;
+ const realSrc='/ohje/gosta-original';
+ function restore(){
+  if(composition){composition.remove();composition=null;}
+  if(original&&oldStyle!==null){original.setAttribute('style',oldStyle);oldStyle=null;}
+  original=null;
+ }
+ function render(){
+  const img=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
+  if(!img||!viewer||!jump)return;
+  if(Number(jump.value)!==38){restore();return;}
+  if(!img.complete||!img.naturalWidth)return;
+  if(original&&original!==img)restore();
+  if(composition)return;
+  original=img;oldStyle=img.getAttribute('style')||'';
+  // The fabricated phone and avatar are REMOVED from the visible slide, not covered.
+  // Only the authentic right-side instruction region is retained from the old source.
+  img.style.display='none';
+  composition=document.createElement('div');
+  composition.id='ziiply-slide39-rebuilt';
+  composition.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:2%;background:#fff9eb;overflow:hidden;';
+  const heading=document.createElement('div');
+  heading.style.cssText='flex:0 0 12%;display:flex;align-items:center;box-sizing:border-box;border:2px solid #c49d54;border-radius:12px;padding:0 2%;font:bold clamp(13px,2.4vw,34px) system-ui;color:#164b3a;';
+  heading.textContent='GÖSTA – TARJOUSVAHTI';
+  const columns=document.createElement('div');
+  columns.style.cssText='flex:1;min-height:0;display:flex;gap:1.5%;padding-top:1%;';
+  const left=document.createElement('div');
+  left.style.cssText='flex:0 0 40%;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
+  const authentic=document.createElement('img');
+  authentic.src=realSrc;authentic.alt='Alkuperäinen Göstan tarjousvahtinäkymä';
+  authentic.style.cssText='display:block!important;position:static!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;transform:none!important;';
+  left.appendChild(authentic);
+  const right=document.createElement('div');
+  right.style.cssText='flex:1;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;';
+  const canvas=document.createElement('canvas');
+  // Crop ONLY the existing genuine instruction panel, excluding the entire fake phone and avatar.
+  const sx=Math.round(img.naturalWidth*.418),sy=Math.round(img.naturalHeight*.213);
+  const sw=Math.round(img.naturalWidth*.565),sh=Math.round(img.naturalHeight*.69);
+  canvas.width=sw;canvas.height=sh;
+  canvas.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,sw,sh);
+  canvas.style.cssText='display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;';
+  right.appendChild(canvas);
+  columns.append(left,right);composition.append(heading,columns);
+  viewer.appendChild(composition);
  }
  function start(){
-  const image=document.getElementById('picture');if(!image)return;
-  image.addEventListener('load',place);
-  new MutationObserver(place).observe(image,{attributes:true,attributeFilter:['src']});
-  window.addEventListener('resize',place);
-  document.getElementById('jump')?.addEventListener('change',()=>requestAnimationFrame(place));
-  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(place));
-  place();
+  const img=document.getElementById('picture');if(!img)return;
+  img.addEventListener('load',()=>{restore();render()});
+  new MutationObserver(()=>{restore();render()}).observe(img,{attributes:true,attributeFilter:['src']});
+  document.getElementById('jump')?.addEventListener('change',()=>requestAnimationFrame(()=>{restore();render()}));
+  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(()=>{restore();render()}));
+  render();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
