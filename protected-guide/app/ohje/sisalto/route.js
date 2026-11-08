@@ -91,6 +91,46 @@ export async function GET(request){
 })();
 </script>`;
 
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
+ const slide39LeftImage = `<script id="ziiply-slide39-left-image-only">
+(function(){
+ const replacement='/ohje/gosta-original';
+ let overlay=null;
+ function update(){
+  const picture=document.getElementById('picture'),viewer=document.getElementById('viewer'),jump=document.getElementById('jump');
+  if(!picture||!viewer||!jump)return;
+  if(Number(jump.value)!==38){if(overlay){overlay.remove();overlay=null;}return;}
+  if(!overlay){
+   overlay=document.createElement('img');
+   overlay.src=replacement;
+   overlay.alt='Alkuperäinen Göstan tarjousvahtikuva';
+   overlay.style.cssText='position:absolute;z-index:2;object-fit:cover;object-position:center top;border-radius:3%;pointer-events:none;';
+   viewer.appendChild(overlay);
+  }
+  const box=picture.getBoundingClientRect(),frame=viewer.getBoundingClientRect();
+  if(!picture.naturalWidth||!picture.naturalHeight)return;
+  const scale=Math.min(box.width/picture.naturalWidth,box.height/picture.naturalHeight);
+  const width=picture.naturalWidth*scale,height=picture.naturalHeight*scale;
+  const x=box.left-frame.left+(box.width-width)/2;
+  const y=box.top-frame.top+(box.height-height)/2;
+  // Only the phone-screen area in the LEFT column is replaced.
+  // The title, phone frame, entire RIGHT instruction panel and all other slides stay untouched.
+  Object.assign(overlay.style,{
+   left:(x+width*0.087)+'px',top:(y+height*0.222)+'px',
+   width:(width*0.273)+'px',height:(height*0.643)+'px'
+  });
+ }
+ function start(){
+  const picture=document.getElementById('picture');if(!picture)return;
+  picture.addEventListener('load',update);
+  new MutationObserver(update).observe(picture,{attributes:true,attributeFilter:['src']});
+  window.addEventListener('resize',update);
+  document.getElementById('jump')?.addEventListener('change',()=>requestAnimationFrame(update));
+  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>requestAnimationFrame(update));
+  update();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>`;
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+slide39LeftImage+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
