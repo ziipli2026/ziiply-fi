@@ -91,44 +91,6 @@ export async function GET(request){
 })();
 </script>`;
 
- const slide39Fix = `<style id="ziiply-slide39-layout">
-@media(min-width:701px){
- body.ziiply-slide39 #viewer{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:24px!important;padding:12px 24px!important;box-sizing:border-box!important}
- body.ziiply-slide39 #viewer #picture{flex:0 1 55%!important;width:auto!important;max-width:55%!important;max-height:100%!important;height:100%!important;object-fit:contain!important}
- body.ziiply-slide39 #ziiply-slide39-instructions{display:flex;flex:1 1 40%;flex-direction:column;justify-content:center;gap:16px;padding:24px 20px;color:#214e40;font-size:clamp(17px,1.6vw,25px);line-height:1.45;background:#eef5e9;border-radius:16px;white-space:pre-line;box-sizing:border-box}
-}
-@media(max-width:700px){
- body.ziiply-slide39 #ziiply-slide39-instructions{display:none}
-}
-</style><script id="ziiply-mobile-slide39-fix">
-(function(){
- const imageUrl='/ohje/gosta-original';
- function apply(){
-  const jump=document.getElementById('jump'),picture=document.getElementById('picture'),viewer=document.getElementById('viewer');
-  if(!jump||!picture||!viewer)return;
-  const is39=Number(jump.value)===38;
-  document.body.classList.toggle('ziiply-slide39',is39);
-  let instructions=document.getElementById('ziiply-slide39-instructions');
-  if(!is39){if(instructions)instructions.remove();return;}
-  if(!instructions){
-   instructions=document.createElement('div');
-   instructions.id='ziiply-slide39-instructions';
-   instructions.textContent=document.getElementById('slideDescription')?.textContent||'Kirjoita seurattava tuote tai hakusana hakukenttään.\\nPaina Tallenna, jotta Gösta seuraa sen tarjouksia.\\nLöytyneet tarjoukset näkyvät osumalistassa hintoineen.';
-   viewer.appendChild(instructions);
-  }
-  if(picture.getAttribute('src')!==imageUrl){picture.src=imageUrl;picture.alt='Göstan alkuperäinen tarjousvahtinäkymä';}
- }
- function start(){
-  const picture=document.getElementById('picture');
-  if(!picture)return;
-  new MutationObserver(()=>apply()).observe(picture,{attributes:true,attributeFilter:['src']});
-  document.getElementById('jump')?.addEventListener('change',()=>setTimeout(apply,0));
-  for(const id of ['next','prev'])document.getElementById(id)?.addEventListener('click',()=>setTimeout(apply,0));
-  apply();
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-})();
-</script>`;
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+slide39Fix+'</body>');
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
