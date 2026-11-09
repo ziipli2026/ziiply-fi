@@ -1,5 +1,8 @@
 const nextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    '/ohje/gosta-tarjousvahti-dia': ['./gosta-tarjousvahti-slide-39.png'],
+  },
   async headers() {
     return [{
       source: '/:path*',

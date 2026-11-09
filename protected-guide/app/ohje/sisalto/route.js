@@ -91,6 +91,7 @@ export async function GET(request){
 })();
 </script>`;
 
- const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',preload+'</body>');
+ const mobileSlide = "<script>if (typeof slides !== 'undefined' && slides[38]) slides[38].src = '/ohje/gosta-tarjousvahti-dia';</script>";
+ const html=desktop?rows[0].html.replace('</head>',desktopLayout+'</head>').replace('</body>',desktopStabilizer+'</body>'):rows[0].html.replace('</body>',mobileSlide+preload+'</body>');
  return new NextResponse(html,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','Content-Security-Policy':"default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"}});
 }
