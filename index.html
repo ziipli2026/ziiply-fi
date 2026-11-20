@@ -36,15 +36,16 @@ p{font-size:20px}
 .story .brand{color:#9aff9c}
 .story .site{font-size:clamp(25px,4vw,44px);font-weight:800}
 
-.beta-invite{align-items:flex-start;background:#f4fff1;color:#14291c;text-align:left}
-.beta-invite .welcome-inner{width:100%;max-width:780px;padding:clamp(20px,4vh,42px) 20px}
-.beta-invite h1,.beta-invite h2{color:#185b34;font-weight:800;line-height:1.2;margin:0 0 .65em}
-.beta-invite h1{font-size:clamp(24px,4.4vw,38px)}
-.beta-invite h2{font-size:clamp(20px,3.4vw,28px)}
-.beta-invite p,.beta-invite ul{font-size:clamp(16px,2vw,18px);line-height:1.45;margin:0 0 .75em}
+.beta-invite{height:auto;align-items:safe center;background:#f4fff1;color:#14291c;text-align:left;font-size:clamp(14px,2vw,17px)}
+.beta-invite .welcome-inner{width:100%;max-width:1080px;padding:.8em clamp(12px,3vw,32px)}
+.beta-invite h1,.beta-invite h2{color:#185b34;font-weight:800;line-height:1.12;margin:0 0 .35em}
+.beta-invite h1{font-size:1.85em;text-wrap:balance}
+.beta-invite h2{font-size:1.35em}
+.beta-invite p,.beta-invite ul{font-size:1em;line-height:1.28;margin:0 0 .45em}
+.beta-invite p:last-child{margin-bottom:0}
 .beta-invite ul{list-style:none;padding:0}
-.beta-invite li+li{margin-top:.3em}
-.beta-invite .button{background:#185b34;font-weight:700}
+.beta-invite li+li{margin-top:.12em}
+.beta-invite .button{background:#185b34;font-weight:700;padding:.5em .9em}
 #countdown{position:static;transform:none;font-size:clamp(11px,3vw,15px)}
 </style>
 </head>
@@ -115,6 +116,19 @@ p{font-size:20px}
 </main>
 <script>
 (()=>{
+const invitation=document.getElementById('welcome');
+const invitationContent=invitation.querySelector('.welcome-inner');
+function fitInvitation(){
+ invitation.style.removeProperty('font-size');
+ const preferredSize=parseFloat(getComputedStyle(invitation).fontSize);
+ if(invitationContent.offsetHeight<=invitation.clientHeight)return;
+ for(let size=Math.floor(preferredSize*2)/2;size>=9;size-=.5){
+  invitation.style.fontSize=size+'px';
+  if(invitationContent.offsetHeight<=invitation.clientHeight)break;
+ }
+}
+fitInvitation();
+new ResizeObserver(fitInvitation).observe(invitation);
 const slides=[...document.querySelectorAll('.slide')];
 const label=document.getElementById('countdown');
 const pause=document.getElementById('pause');
