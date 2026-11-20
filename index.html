@@ -35,18 +35,39 @@ p{font-size:20px}
 .story p{font-size:clamp(19px,3vw,33px);line-height:1.42;margin:12px auto}
 .story .brand{color:#9aff9c}
 .story .site{font-size:clamp(25px,4vw,44px);font-weight:800}
+
+.beta-invite{align-items:flex-start;background:#f4fff1;color:#14291c;text-align:left}
+.beta-invite .welcome-inner{width:100%;max-width:780px;padding:clamp(20px,4vh,42px) 20px}
+.beta-invite h1,.beta-invite h2{color:#185b34;font-weight:800;line-height:1.2;margin:0 0 .65em}
+.beta-invite h1{font-size:clamp(24px,4.4vw,38px)}
+.beta-invite h2{font-size:clamp(20px,3.4vw,28px)}
+.beta-invite p,.beta-invite ul{font-size:clamp(16px,2vw,18px);line-height:1.45;margin:0 0 .75em}
+.beta-invite ul{list-style:none;padding:0}
+.beta-invite li+li{margin-top:.3em}
+.beta-invite .button{background:#185b34;font-weight:700}
+#countdown{position:static;transform:none;font-size:clamp(11px,3vw,15px)}
 </style>
 </head>
 <body>
 <main class="stage on-welcome" aria-label="Ziiply presentation">
-<section class="slide welcome active" id="welcome">
+<section class="slide welcome beta-invite active" id="welcome" lang="fi" aria-labelledby="beta-title" tabindex="0">
 <div class="welcome-inner">
-<h1>Ziiply</h1>
-<h2>One search. All offers.</h2>
-<p>We're building a smarter way to find grocery offers and compare products across retailers.</p>
-<p>🚧 Currently under development</p>
-<p>Follow our journey on LinkedIn.</p>
-<p><a class="button" href="https://www.linkedin.com/company/ziiply">Visit LinkedIn</a></p>
+<h1 id="beta-title">💸 RUOKA MAKSAA MALTAITA – MUTTA MIKSI MAKSAA ENEMMÄN KUIN ON PAKKO? 🛒</h1>
+<p>Nyt eletään aikoja, jolloin monessa taloudessa euroja joutuu laskemaan entistä tarkemmin. Ruokakaupan kassalla loppusumma hirvittää, eikä ruoan hinnassa tunnu olevan paljonkaan joustovaraa. Silti syödä pitää joka päivä!</p>
+<p>Mutta entä jos voisit helposti selvittää, mistä saat ruokasi halvimmalla? 🤔</p>
+<p>Olen ollut kehittämässä uutta suomalaista Ziiply-palvelua, jonka avulla voi vertailla eri ruokakauppojen hintoja ja tarjouksia sekä selvittää, mistä oman ostoskorin saisi edullisimmin.</p>
+<ul>
+<li>🥦 Vertaa päivittäistavaroiden hintoja eri kaupoissa.</li>
+<li>🛒 Selvitä, mistä ostoskorisi saa halvimmalla.</li>
+<li>🔥 Löydä tarjoukset ilman, että selaat jokaisen kaupan mainokset erikseen.</li>
+<li>💰 Säästä rahaa ihan tavallisissa arjen ruokaostoksissa!</li>
+</ul>
+<h2>NYT TARVITSISIN 400 VAPAAEHTOISTA BEETATESTAAJAA! 🚀</h2>
+<p>Haluaisin saada mukaan ihan tavallisia suomalaisia, jotka käyvät ruokakaupassa, seuraavat hintoja ja haluaisivat säästää ostoksissaan. Samalla pääsisi ensimmäisten joukossa kokeilemaan palvelua ja antamaan palautetta sen kehittämiseen.</p>
+<p>Osallistuminen on maksutonta, ja ilmoittautumislomakkeen täyttämiseen menee vain 10–20 sekuntia.</p>
+<p><a class="button" href="https://beta.ziiply.fi/beta/ilmoittaudu">👉 ILMOITTAUDU MUKAAN TÄSTÄ</a></p>
+<p>Olisin todella kiitollinen, jos lähtisit mukaan tai jakaisit tätä eteenpäin. Mitä enemmän saamme erilaisia käyttäjiä testaamaan, sitä paremman palvelun saamme rakennettua!</p>
+<p><strong>Ruoka on pakko ostaa. Ylimääräistä ei ole pakko maksaa. 💚</strong></p>
 </div>
 </section>
 <section class="slide poster" aria-label="Kolme varjoa, yksi tavoite"><img src="images/ziiplyFI_20_10.png" alt="Kolme persoonaa, yksi yhteinen tavoite: tehdä ruoka-arjesta fiksumpaa"></section>
